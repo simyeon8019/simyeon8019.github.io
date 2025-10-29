@@ -22,6 +22,7 @@ Giscus는 GitHub Discussions를 기반으로 한 댓글 시스템입니다.
 1. [https://giscus.app/ko](https://giscus.app/ko) 접속
 2. **저장소** 섹션에서 `simyeon8019/simyeon8019.github.io` 입력
 3. 설정 옵션:
+
    - **페이지 ↔️ Discussions 매핑**: `pathname` 선택 (권장)
    - **Discussion 카테고리**: `General` 또는 `Announcements` 선택
    - **기능**:
@@ -37,11 +38,20 @@ Giscus는 GitHub Discussions를 기반으로 한 댓글 시스템입니다.
 1. `js/post-loader.js` 파일 열기
 2. `loadGiscus()` 함수에서 다음 값 업데이트:
    ```javascript
-   script.setAttribute('data-repo', 'simyeon8019/simyeon8019.github.io');
-   script.setAttribute('data-repo-id', 'YOUR_REPO_ID'); // 3단계에서 복사한 값으로 변경
-   script.setAttribute('data-category', 'General'); // 선택한 카테고리 이름
-   script.setAttribute('data-category-id', 'YOUR_CATEGORY_ID'); // 3단계에서 복사한 값으로 변경
+   script.setAttribute("data-repo", "simyeon8019/simyeon8019.github.io");
+   script.setAttribute("data-repo-id", "R_kgDOQLHI4w"); // 실제 저장소 ID
+   script.setAttribute("data-category", "General"); // 선택한 카테고리 이름
+   script.setAttribute("data-category-id", "DIC_kwDOQLHI484CxMbA"); // 실제 카테고리 ID
    ```
+
+### ✅ 설정 완료!
+
+현재 다음 값들이 설정되어 있습니다:
+
+- **Repository**: `simyeon8019/simyeon8019.github.io`
+- **Repository ID**: `R_kgDOQLHI4w`
+- **Category**: `General`
+- **Category ID**: `DIC_kwDOQLHI484CxMbA`
 
 ## 5단계: 저장소 push
 

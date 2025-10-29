@@ -189,27 +189,66 @@ class PostLoader {
   loadGiscus() {
     if (!this.giscusComments) return;
 
-    // GitHub Discussions가 활성화되지 않은 경우 안내 메시지 표시
-    this.giscusComments.innerHTML = `
-      <div style="text-align: center; color: var(--text-secondary); padding: 2rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary);">
-        <h4>💬 댓글 시스템</h4>
-        <p>댓글 기능을 사용하려면 다음 단계를 따라주세요:</p>
-        <ol style="text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
-          <li>GitHub 저장소에서 <strong>Discussions</strong> 활성화</li>
-          <li><a href="https://giscus.app" target="_blank" style="color: var(--accent-color);">Giscus 앱</a> 설치</li>
-          <li>Repository ID와 Category ID 설정</li>
-        </ol>
-        <p style="font-size: 0.9rem; margin-top: 1rem;">
-          <a href="https://github.com/simyeon8019/simyeon8019.github.io/discussions" target="_blank" style="color: var(--accent-color);">
-            GitHub Discussions로 이동 →
-          </a>
-        </p>
-      </div>
-    `;
+    // 로딩 상태 표시
+    this.giscusComments.classList.add("loading");
 
-    console.log(
-      "📝 참고: 실제 사용을 위해 GitHub Discussions를 활성화하고 Giscus 앱을 설치해주세요."
-    );
+    // Giscus 설정 - simyeon8019.github.io 저장소용
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute("data-repo", "simyeon8019/simyeon8019.github.io");
+    script.setAttribute("data-repo-id", "R_kgDOQLHI4w"); // 실제 저장소 ID
+    script.setAttribute("data-category", "General");
+    script.setAttribute("data-category-id", "DIC_kwDOQLHI484CxMbA"); // 실제 카테고리 ID
+    script.setAttribute("data-mapping", "pathname");
+    script.setAttribute("data-strict", "0");
+    script.setAttribute("data-reactions-enabled", "1");
+    script.setAttribute("data-emit-metadata", "1");
+    script.setAttribute("data-input-position", "bottom");
+    script.setAttribute("data-theme", "preferred_color_scheme");
+    script.setAttribute("data-lang", "ko");
+    script.setAttribute("crossorigin", "anonymous");
+    script.async = true;
+
+    // 스크립트 로드 완료 시 로딩 상태 제거
+    script.onload = () => {
+      this.giscusComments.classList.remove("loading");
+      console.log("✅ Giscus 댓글 시스템이 로드되었습니다:", {
+        repo: "simyeon8019/simyeon8019.github.io",
+        timestamp: new Date().toISOString(),
+      });
+    };
+
+    script.onerror = () => {
+      this.giscusComments.classList.remove("loading");
+      this.giscusComments.innerHTML = `
+        <div style="text-align: center; color: var(--text-secondary); padding: 2rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary);">
+          <h4>💬 댓글 시스템</h4>
+          <p>댓글 기능을 사용하려면 다음 단계를 따라주세요:</p>
+          <ol style="text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
+            <li>GitHub 저장소에서 <strong>Discussions</strong> 활성화</li>
+            <li><a href="https://giscus.app" target="_blank" style="color: var(--accent-color);">Giscus 앱</a> 설치</li>
+            <li>Repository ID와 Category ID 설정</li>
+          </ol>
+          <p style="font-size: 0.9rem; margin-top: 1rem;">
+            <a href="https://github.com/simyeon8019/simyeon8019.github.io/discussions" target="_blank" style="color: var(--accent-color);">
+              GitHub Discussions로 이동 →
+            </a>
+          </p>
+        </div>
+      `;
+      console.error("❌ Giscus 댓글 시스템 로드 실패:", {
+        error: "스크립트 로드 실패",
+        repo: "simyeon8019/simyeon8019.github.io",
+        timestamp: new Date().toISOString(),
+      });
+    };
+
+    this.giscusComments.appendChild(script);
+    console.log("✅ Giscus 댓글 시스템 초기화 완료:", {
+      repo: "simyeon8019/simyeon8019.github.io",
+      category: "General",
+      timestamp: new Date().toISOString(),
+    });
   }
 
   formatDate(dateString) {
