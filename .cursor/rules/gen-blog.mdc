@@ -103,3 +103,7 @@ console.error("❌ 블로그 포스트 생성 실패:", {
 - [example.md](mdc:pages/example.md) - 블로그 포스트 예시
 - [javascript-es6.md](mdc:pages/javascript-es6.md) - 기술 튜토리얼 예시
 - [posts.json](mdc:posts.json) - 포스트 메타데이터 파일
+
+## 필수사항
+
+블로그 글을 작성하고 나서 항상 `node .github/scripts/generate-posts.js`를 실행하여 posts.json 파일을 생성하세요.
