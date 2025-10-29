@@ -1,38 +1,38 @@
 [
   {
-    "file": "ai-news-trends-2025.md",
-    "title": "2025년 AI 뉴스 트렌드 분석: 인공지능의 새로운 전환점",
-    "date": "2025-01-27",
-    "tags": ["AI", "News", "Technology", "Trends"],
-    "category": "Technology",
-    "description": "2025년 AI 분야의 최신 뉴스와 트렌드를 분석하여 인공지능 기술의 현재와 미래를 살펴봅니다.",
-    "excerpt": "2025년은 인공지능(AI) 기술이 새로운 전환점을 맞이한 해입니다. 이번 글에서는 최신 AI 뉴스를 통해 현재 AI 기술의 발전 상황과 주요 트렌드를 분석해보겠습니다."
-  },
-  {
-    "file": "ai-web-development-productivity.md",
-    "title": "AI 도구를 활용한 웹 개발 생산성 향상 가이드",
-    "date": "2025-01-27",
-    "tags": ["AI", "Web Development", "Productivity", "Tools"],
-    "category": "Development",
-    "description": "ChatGPT, GitHub Copilot 등 AI 도구를 활용하여 웹 개발 생산성을 크게 향상시키는 실용적인 방법들을 소개합니다.",
-    "excerpt": "2025년 현재, AI 도구들은 웹 개발자들의 필수 도구가 되었습니다. 이번 글에서는 ChatGPT, GitHub Copilot, Claude 등 다양한 AI 도구를 활용하여 웹 개발 생산성을 크게 향상시키는 실용적인 방법들을 소개하겠습니다."
-  },
-  {
     "file": "javascript-es6.md",
-    "title": "JavaScript ES6+ 주요 기능 정리",
-    "date": "2025-01-25",
-    "tags": ["JavaScript", "ES6", "Programming"],
-    "category": "Tutorial",
-    "description": "ES6부터 추가된 JavaScript의 주요 기능들을 정리하고 예제와 함께 설명합니다.",
-    "excerpt": "JavaScript ES6(ES2015)부터 추가된 주요 기능들을 정리해보겠습니다. 이 기능들은 현대적인 JavaScript 개발에 필수적입니다."
+    "title": "javascript-es6",
+    "date": "2025-10-29",
+    "tags": [],
+    "category": "",
+    "description": "",
+    "excerpt": "---\r title: \"JavaScript ES6+ 주요 기능 정리\"\r date: 2025-01-25\r tags: \r category: \"Tutorial\"\r description: \"ES6부터 추가된 JavaScript의 주요 기능들을 정리하고 예제와 함께 설명합니다.\"\r ---\r \r \r \r JavaScript ES6(ES2015)부터 추가된 주요 기능들을..."
   },
   {
     "file": "example.md",
-    "title": "GitHub Pages 정적 블로그 구축하기",
-    "date": "2025-01-26",
-    "tags": ["GitHub", "JavaScript", "Web", "Blog"],
-    "category": "Development",
-    "description": "GitHub Pages를 활용하여 마크다운 기반의 정적 블로그를 구축하는 방법을 알아봅니다.",
-    "excerpt": "GitHub Pages를 활용하면 무료로 정적 웹사이트를 호스팅할 수 있습니다. 이번 글에서는 마크다운 기반의 블로그를 구축하는 방법을 단계별로 설명하겠습니다."
+    "title": "example",
+    "date": "2025-10-29",
+    "tags": [],
+    "category": "",
+    "description": "",
+    "excerpt": "---\r title: \"GitHub Pages 정적 블로그 구축하기\"\r date: 2025-01-26\r tags: \r category: \"Development\"\r description: \"GitHub Pages를 활용하여 마크다운 기반의 정적 블로그를 구축하는 방법을 알아봅니다.\"\r ---\r \r \r \r GitHub Pages를 활용하면 무료로 정적 웹사이트..."
+  },
+  {
+    "file": "ai-web-development-productivity.md",
+    "title": "ai-web-development-productivity",
+    "date": "2025-10-29",
+    "tags": [],
+    "category": "",
+    "description": "",
+    "excerpt": "---\r title: \"AI 도구를 활용한 웹 개발 생산성 향상 가이드\"\r date: 2025-01-27\r tags: \r category: \"Development\"\r description: \"ChatGPT, GitHub Copilot 등 AI 도구를 활용하여 웹 개발 생산성을 크게 향상시키는 실용적인 방법들을 소개합니다.\"\r ---\r \r \r \r 2025년"
+  },
+  {
+    "file": "ai-news-trends-2025.md",
+    "title": "ai-news-trends-2025",
+    "date": "2025-10-29",
+    "tags": [],
+    "category": "",
+    "description": "",
+    "excerpt": "---\r title: \"2025년 AI 뉴스 트렌드 분석: 인공지능의 새로운 전환점\"\r date: 2025-01-27\r tags: \r category: \"Technology\"\r description: \"2025년 AI 분야의 최신 뉴스와 트렌드를 분석하여 인공지능 기술의 현재와 미래를 살펴봅니다.\"\r ---\r \r \r \r 2025년은 인공지능(AI) 기술이"
   }
 ]
