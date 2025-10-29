@@ -1,0 +1,239 @@
+/* Prism.js 코드 하이라이팅 테마 - 다크/라이트 모드 지원 */
+
+/* 라이트 모드 */
+:root {
+  --prism-bg: #f8f9fa;
+  --prism-text: #333;
+  --prism-comment: #6a737d;
+  --prism-keyword: #d73a49;
+  --prism-string: #032f62;
+  --prism-number: #005cc5;
+  --prism-function: #6f42c1;
+  --prism-variable: #e36209;
+  --prism-class: #6f42c1;
+  --prism-tag: #22863a;
+  --prism-attr: #6f42c1;
+  --prism-punctuation: #24292e;
+  --prism-operator: #d73a49;
+  --prism-regex: #032f62;
+  --prism-selector: #22863a;
+  --prism-property: #005cc5;
+}
+
+/* 다크 모드 */
+[data-theme="dark"] {
+  --prism-bg: #2d3748;
+  --prism-text: #e2e8f0;
+  --prism-comment: #a0aec0;
+  --prism-keyword: #f56565;
+  --prism-string: #68d391;
+  --prism-number: #63b3ed;
+  --prism-function: #b794f6;
+  --prism-variable: #f6ad55;
+  --prism-class: #b794f6;
+  --prism-tag: #68d391;
+  --prism-attr: #b794f6;
+  --prism-punctuation: #e2e8f0;
+  --prism-operator: #f56565;
+  --prism-regex: #68d391;
+  --prism-selector: #68d391;
+  --prism-property: #63b3ed;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: var(--prism-text);
+  background: var(--prism-bg);
+  text-shadow: none;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.9em;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+pre[class*="language-"] {
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid var(--prism-border, #e2e8f0);
+}
+
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em 0.3em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--prism-comment);
+}
+
+.token.punctuation {
+  color: var(--prism-punctuation);
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: var(--prism-tag);
+}
+
+.token.boolean,
+.token.number {
+  color: var(--prism-number);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--prism-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: var(--prism-variable);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+  color: var(--prism-function);
+}
+
+.token.keyword {
+  color: var(--prism-keyword);
+}
+
+.token.regex,
+.token.important {
+  color: var(--prism-regex);
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* 특정 언어별 스타일 */
+.language-javascript .token.function,
+.language-typescript .token.function {
+  color: var(--prism-function);
+}
+
+.language-css .token.selector {
+  color: var(--prism-selector);
+}
+
+.language-css .token.property {
+  color: var(--prism-property);
+}
+
+.language-html .token.tag {
+  color: var(--prism-tag);
+}
+
+.language-html .token.attr-name {
+  color: var(--prism-attr);
+}
+
+.language-html .token.attr-value {
+  color: var(--prism-string);
+}
+
+/* 라인 넘버 */
+.line-numbers .line-numbers-rows {
+  border-right: 1px solid var(--prism-border, #e2e8f0);
+}
+
+.line-numbers-rows > span:before {
+  color: var(--prism-comment);
+}
+
+/* 선택된 텍스트 */
+::selection {
+  background: var(--prism-selection-bg, rgba(0, 122, 204, 0.2));
+}
+
+/* 다크 모드에서 선택된 텍스트 */
+[data-theme="dark"] ::selection {
+  background: rgba(77, 171, 247, 0.3);
+}
+
+/* 코드 블록 스크롤바 */
+pre[class*="language-"]::-webkit-scrollbar {
+  height: 8px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+  background: var(--prism-bg);
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: var(--prism-border, #e2e8f0);
+  border-radius: 4px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+  background: var(--prism-comment);
+}
+
+/* 복사 버튼 (선택사항) */
+.code-block-wrapper {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--prism-bg);
+  border: 1px solid var(--prism-border, #e2e8f0);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  color: var(--prism-text);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.copy-button:hover {
+  opacity: 1;
+}
