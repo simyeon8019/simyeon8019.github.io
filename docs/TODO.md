@@ -1,0 +1,226 @@
+- [ ] Phase 1 (Week 1): 기본 구조 및 핵심 기능
+  - [x] 프로젝트 설정 및 초기 구성
+    - [x] Next.js 프로젝트 초기 설정 확인
+    - [x] Clerk 인증 설정 및 연동
+    - [x] Supabase 클라이언트 설정 (서버/클라이언트)
+    - [x] 환경 변수 설정 (.env.local)
+      - [x] NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+      - [x] CLERK_SECRET_KEY
+      - [x] NEXT_PUBLIC_SUPABASE_URL
+      - [x] NEXT_PUBLIC_SUPABASE_ANON_KEY
+      - [x] SUPABASE_SERVICE_ROLE_KEY
+    - [x] Next.js Middleware 설정 (Clerk 세션 확인)
+    - [x] 기본 레이아웃 및 네비게이션 컴포넌트
+  - [x] 사용자 인증 및 동기화
+    - [x] API Route: POST /api/users/sync (실제 경로: /api/sync-user)
+      - [x] Clerk 사용자 정보 조회
+      - [x] Supabase users 테이블 조회/생성/업데이트
+      - [x] 에러 처리 및 로깅
+    - [x] 사용자 동기화 Provider/Context 설정
+    - [x] 로그인/회원가입 페이지 (Clerk 컴포넌트)
+  - [x] 상품 관련 기능 (우선순위: P0)
+    - [x] API Route: GET /api/products
+      - [x] 쿼리 파라미터 처리 (category, search, page)
+      - [x] Supabase에서 상품 목록 조회
+      - [x] 페이지네이션 구현
+      - [x] 카테고리 필터링
+      - [x] 검색 기능 (상품명 기준)
+    - [x] API Route: GET /api/products/[id]
+      - [x] 상품 ID로 단일 상품 조회
+      - [x] 재고 확인 (선택사항)
+      - [x] 에러 처리
+    - [x] 상품 목록 페이지 (app/products/page.tsx)
+      - [x] 그리드 레이아웃 구현
+      - [x] 상품 카드 컴포넌트 (이미지, 이름, 가격)
+      - [x] 무한 스크롤 또는 페이지네이션
+      - [x] 카테고리 필터 UI
+      - [x] 검색 입력 UI
+      - [x] 로딩 상태 처리
+      - [x] 에러 상태 처리
+    - [x] 상품 상세 페이지 (app/products/[id]/page.tsx)
+      - [x] 상품 이미지 갤러리 (메인 이미지 + 썸네일)
+      - [x] 상품 정보 표시 (이름, 가격, 설명)
+      - [x] 사이즈 선택 UI (드롭다운 또는 버튼)
+      - [x] 수량 선택 UI (증가/감소 버튼)
+      - [x] 장바구니 추가 버튼
+      - [x] 바로 구매 버튼
+      - [x] 재고 표시 (선택사항)
+      - [x] 로딩/에러 상태 처리
+  - [x] 장바구니 기능 (우선순위: P0)
+    - [x] API Route: GET /api/cart
+      - [x] Clerk 사용자 ID로 장바구니 조회
+      - [x] 상품 정보 JOIN
+      - [x] 권한 확인
+    - [x] API Route: POST /api/cart
+      - [x] 장바구니에 상품 추가
+      - [x] 중복 상품 처리 (같은 상품, 같은 사이즈는 수량 업데이트)
+      - [x] 권한 확인
+      - [x] 수량 검증 (1-99)
+    - [x] API Route: PUT /api/cart/[id]
+      - [x] 장바구니 아이템 수량 변경
+      - [x] 권한 확인
+      - [x] 수량 검증
+    - [x] API Route: DELETE /api/cart/[id]
+      - [x] 장바구니 아이템 삭제
+      - [x] 권한 확인
+    - [x] 장바구니 페이지 (app/cart/page.tsx)
+      - [x] 장바구니 아이템 목록 표시
+      - [x] 상품 정보 표시 (이미지, 이름, 사이즈, 가격)
+      - [x] 수량 변경 UI
+      - [x] 개별 상품 삭제 버튼
+      - [x] 전체 선택/해제 체크박스
+      - [x] 선택된 상품 총 금액 계산
+      - [x] 주문하기 버튼
+      - [x] 빈 장바구니 상태 UI
+      - [x] 로딩/에러 상태 처리
+    - [ ] 장바구니 상태 관리 (Context API 또는 Zustand) - 선택사항, 필요시 추가
+- [x] Phase 2: 상품 기능 (1주)
+  - [x] 홈페이지 상세 기능
+    - [x] 홈페이지 레이아웃 (app/page.tsx)
+      - [x] 카테고리 네비게이션 섹션
+        - [x] 6개 주요 카테고리 표시 (상의, 하의, 아우터, 드레스, 신발, 액세서리)
+        - [x] 카테고리 클릭 시 해당 카테고리 상품 목록 페이지로 이동
+        - [x] 각 카테고리 아이콘 또는 대표 이미지 표시
+        - [x] 반응형 그리드 레이아웃 (모바일: 2열, 태블릿: 3열, 데스크톱: 6열)
+      - [x] 인기 상품 섹션
+        - [x] API Route: GET /api/products/popular
+          - [x] 주문량 기준 인기 상품 조회
+          - [x] 상위 8-12개 상품 반환
+        - [x] 인기 상품 그리드 표시
+          - [x] 주문량 기준 인기 상품 8-12개 표시
+          - [x] 상품 카드 컴포넌트 (이미지, 이름, 가격)
+          - [x] 더보기 버튼 (전체 상품 목록 페이지로 이동)
+        - [x] 로딩 상태 및 에러 처리
+      - [x] 전체 상품 목록 섹션
+        - [x] 최신 상품 그리드 표시
+          - [x] API Route: GET /api/products 활용 (기존 API)
+          - [x] 최신 상품 12-16개 미리보기 표시
+          - [x] 기본 정렬: 최신순 (created_at DESC)
+        - [x] 상품 카드 컴포넌트 (이미지, 이름, 가격)
+        - [x] 더보기 버튼 (전체 상품 목록 페이지로 이동)
+        - [x] 로딩 상태 및 에러 처리
+      - [x] 반응형 디자인 구현 (모바일 우선)
+      - [x] SEO 최적화 (메타데이터 설정)
+  - [x] 제품 이미지 플레이스홀더 기능 (Tavily API 활용)
+    - [x] Tavily API를 사용한 이미지 검색 유틸리티 함수 생성 (lib/utils/image-placeholder.ts)
+    - [x] API Route: GET /api/products에서 image_url이 null인 경우 Tavily 검색으로 보강
+    - [x] API Route: GET /api/products/[id]에서 image_url이 null인 경우 Tavily 검색으로 보강
+    - [x] 홈페이지 Server Component에서 이미지 보강 처리
+    - [x] next.config.ts에 외부 이미지 도메인 remotePatterns 추가
+    - [x] 에러 처리 및 로깅 추가
+- [ ] Phase 3 (Week 2): 주문 및 결제
+  - [ ] 주문 프로세스 (우선순위: P0)
+    - [ ] API Route: POST /api/orders
+      - [ ] 주문 정보 생성
+      - [ ] 주문번호 생성 (고유값)
+      - [ ] order_items 생성 (주문 시점 스냅샷)
+      - [ ] 장바구니에서 주문된 아이템 삭제
+      - [ ] 배송지 정보 저장
+      - [ ] 권한 확인
+      - [ ] 에러 처리
+    - [ ] API Route: GET /api/orders
+      - [ ] 사용자별 주문 목록 조회
+      - [ ] 최신순 정렬
+      - [ ] 권한 확인
+    - [ ] API Route: GET /api/orders/[id]
+      - [ ] 주문 상세 정보 조회 (order + order_items)
+      - [ ] 권한 확인
+      - [ ] 에러 처리
+    - [ ] 주문서 작성 페이지 (app/orders/create/page.tsx)
+      - [ ] 주문 상품 확인 섹션
+      - [ ] 배송지 정보 입력 폼
+        - [ ] 수령인 이름
+        - [ ] 수령인 전화번호
+        - [ ] 배송지 주소
+        - [ ] 배송지 상세주소
+        - [ ] 우편번호
+      - [ ] 최종 결제 금액 확인
+      - [ ] 주문하기 버튼
+      - [ ] 폼 유효성 검사
+      - [ ] 로딩/에러 상태 처리
+    - [ ] 주문 완료 페이지 (app/orders/[id]/success/page.tsx)
+      - [ ] 주문번호 표시
+      - [ ] 주문 완료 메시지
+      - [ ] 주문 상품 요약
+      - [ ] 배송지 정보 확인
+      - [ ] 마이페이지 이동 버튼
+      - [ ] 홈으로 이동 버튼
+  - [ ] 결제 연동 (우선순위: P0)
+    - [ ] Toss Payments SDK 설치 및 설정
+    - [ ] Toss Payments 테스트 모드 환경 변수 설정
+    - [ ] API Route: POST /api/payments/verify
+      - [ ] 결제 검증 로직
+      - [ ] 주문 상태 업데이트 (payment_status: 'paid')
+      - [ ] 주문 상태 업데이트 (status: 'completed')
+      - [ ] payment_id 저장
+      - [ ] 보안 검증
+    - [ ] API Route: POST /api/payments/callback
+      - [ ] Toss Payments 웹훅 처리
+      - [ ] 결제 상태 업데이트
+      - [ ] 에러 처리
+    - [ ] 결제 페이지 (app/payments/[orderId]/page.tsx)
+      - [ ] Toss Payments 위젯 표시
+      - [ ] 결제 금액 확인
+      - [ ] 결제 성공 처리
+      - [ ] 결제 실패 처리
+      - [ ] 결제 진행 상태 표시
+      - [ ] 리다이렉트 처리
+  - [ ] 마이페이지 (우선순위: P0)
+    - [ ] 마이페이지 레이아웃 (app/my/page.tsx)
+      - [ ] 프로필 정보 표시 (Clerk 정보)
+      - [ ] 주문 내역 섹션
+      - [ ] 네비게이션 메뉴
+    - [ ] 주문 내역 목록 컴포넌트
+      - [ ] 주문 목록 표시 (주문번호, 날짜, 금액, 상태)
+      - [ ] 주문 상태별 표시 (pending, completed, cancelled)
+      - [ ] 결제 상태 표시 (pending, paid, failed)
+      - [ ] 페이지네이션 또는 무한 스크롤
+      - [ ] 로딩/에러 상태 처리
+    - [ ] 주문 상세 정보 컴포넌트 (app/my/orders/[id]/page.tsx)
+      - [ ] 주문 상품 목록 표시
+      - [ ] 주문 정보 표시 (주문번호, 날짜, 상태)
+      - [ ] 배송지 정보 표시
+      - [ ] 결제 정보 표시
+      - [ ] 주문 취소 기능 (선택사항)
+      - [ ] 로딩/에러 상태 처리
+    - [ ] 프로필 수정 기능 (선택사항)
+      - [ ] 프로필 정보 수정 UI
+      - [ ] API Route: PUT /api/users/profile
+- [ ] 공통 기능 및 개선사항
+  - [ ] UI/UX 개선
+    - [ ] 반응형 디자인 구현 (모바일 우선)
+    - [ ] 로딩 스피너/스켈레톤 UI
+    - [ ] 에러 메시지 표시
+    - [ ] 성공 알림 메시지
+    - [ ] 이미지 최적화 (Next.js Image 컴포넌트)
+  - [ ] 성능 최적화
+    - [ ] API 응답 캐싱 (React Query 또는 SWR)
+    - [ ] 이미지 최적화
+    - [ ] 코드 스플리팅
+    - [ ] 메타데이터 최적화 (SEO)
+  - [ ] 에러 처리 및 로깅
+    - [ ] 전역 에러 처리
+    - [ ] API 에러 처리
+    - [ ] 에러 로깅 (선택사항: Sentry)
+  - [ ] 테스트
+    - [ ] 주요 사용자 시나리오 테스트
+      - [ ] 회원가입/로그인 → 상품 목록 조회
+      - [ ] 상품 상세 → 장바구니 추가
+      - [ ] 장바구니 → 주문하기
+      - [ ] 주문서 작성 → 결제 진행
+      - [ ] 결제 완료 → 주문 내역 확인
+    - [ ] 테스트 데이터 준비 (10-20개 상품)
+- [ ] 배포 준비
+  - [ ] 환경 변수 확인 및 설정
+    - [ ] Clerk 프로덕션 키 설정
+    - [ ] Supabase 프로덕션 URL/키 설정
+    - [ ] Toss Payments 테스트/프로덕션 키 설정
+  - [ ] Vercel 배포 설정
+    - [ ] 프로젝트 연결
+    - [ ] 환경 변수 설정
+    - [ ] 빌드 설정 확인
+  - [ ] 배포 후 검증
+    - [ ] 기본 기능 동작 확인
+    - [ ] 결제 테스트 모드 확인
+    - [ ] 에러 모니터링 설정 (선택사항)
+  - [ ] 도메인 연결 (선택사항)
