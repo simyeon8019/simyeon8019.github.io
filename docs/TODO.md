@@ -34,6 +34,12 @@
       - [x] 상품 카드 컴포넌트 (이미지, 이름, 가격)
       - [x] 무한 스크롤 또는 페이지네이션
       - [x] 카테고리 필터 UI
+        - [x] 카테고리 필터 드롭다운 버튼 스타일 개선 (아이콘 포함)
+        - [x] shoppingmall.sql의 카테고리와 일치 확인 (electronics, clothing, books, food, sports, beauty, home)
+      - [x] 정렬 기능 구현
+        - [x] API Route에 sort 파라미터 추가 (최신순, 이름순)
+        - [x] 정렬 드롭다운 UI 추가
+        - [x] 정렬 상태 URL 파라미터 관리
       - [x] 검색 입력 UI
       - [x] 로딩 상태 처리
       - [x] 에러 상태 처리
@@ -44,6 +50,17 @@
     - [x] 상품 상세 페이지 (app/products/[id]/page.tsx)
       - [x] 상품 이미지 갤러리 (메인 이미지 + 썸네일)
       - [x] 상품 정보 표시 (이름, 가격, 설명)
+      - [x] 상단 섹션 구현 완료
+        - [x] 이름 표시
+        - [x] 가격 표시
+        - [x] 재고 상태 표시 (stock_quantity 또는 stock 지원)
+      - [x] 중단 섹션 구현 완료
+        - [x] 상품 설명 표시 (description 필드, 조건부 렌더링)
+        - [x] 카테고리 정보 표시 (category 필드, 한국어 변환)
+        - [x] 중단 섹션 레이아웃 (상단 섹션과 구분, 적절한 spacing)
+      - [x] 하단 섹션 구현 완료
+        - [x] 등록일 표시 (created_at)
+        - [x] 수정일 표시 (updated_at, 등록일과 다를 때만)
       - [x] 사이즈 선택 UI (드롭다운 또는 버튼)
       - [x] 수량 선택 UI (증가/감소 버튼)
       - [x] 장바구니 추가 버튼
@@ -162,7 +179,7 @@
     - [x] components/ProductSection.tsx: Product 인터페이스 수정 (변경 불필요 확인됨)
     - [x] app/cart/page.tsx: Product, CartItem 인터페이스 수정 (size 제거)
   - [x] API Route 업데이트
-    - [x] app/api/products/route.ts: price 타입 처리 (DECIMAL → number), stock_quantity 필드명 변경
+    - [x] app/api/products/route.ts: price 타입 처리 (DECIMAL → number), stock_quantity 필드명 변경, sort 파라미터 추가 (최신순, 이름순)
     - [x] app/api/products/[id]/route.ts: sizes 제거, stock_quantity로 변경
     - [x] app/api/cart/route.ts: size 필드 제거, UNIQUE 제약조건 변경 (clerk_id, product_id만)
   - [x] UI 컴포넌트 업데이트
