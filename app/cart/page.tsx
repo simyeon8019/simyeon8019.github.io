@@ -25,7 +25,6 @@ interface Product {
 interface CartItem {
   id: string;
   product_id: string;
-  size: string;
   quantity: number;
   created_at: string;
   updated_at: string;
@@ -204,12 +203,13 @@ export default function CartPage() {
   // 카테고리 라벨 변환
   const getCategoryLabel = (category: string): string => {
     const categoryMap: Record<string, string> = {
-      tops: "상의",
-      bottoms: "하의",
-      outerwear: "아우터",
-      dresses: "드레스",
-      shoes: "신발",
-      accessories: "액세서리",
+      electronics: "전자제품",
+      clothing: "의류",
+      books: "도서",
+      food: "식품",
+      sports: "스포츠",
+      beauty: "뷰티",
+      home: "생활/가정",
     };
     return categoryMap[category] || category;
   };
@@ -373,8 +373,7 @@ export default function CartPage() {
                         {item.products.name}
                       </Link>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {getCategoryLabel(item.products.category)} | 사이즈:{" "}
-                        {item.size}
+                        {getCategoryLabel(item.products.category)}
                       </p>
                     </div>
 

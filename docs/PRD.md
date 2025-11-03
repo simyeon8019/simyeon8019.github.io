@@ -35,6 +35,7 @@
 - **인증**: Clerk (로그인/회원가입만 담당)
 - **결제**: Toss Payments (테스트 모드)
 - **RLS**: 사용하지 않음 (서버 사이드에서 권한 관리)
+- **이미지 검색**: Tavily API (제품 이미지 플레이스홀더 기능)
 
 ### 2.3 인프라
 
@@ -105,7 +106,6 @@
 
 - [ ] 상품 이미지 갤러리 (메인 이미지 + 썸네일)
 - [ ] 상품명, 가격, 설명 표시
-- [ ] 사이즈 선택 (XS, S, M, L, XL 등)
 - [ ] 수량 선택
 - [ ] 장바구니 추가 버튼
 - [ ] 바로 구매 버튼
@@ -125,6 +125,7 @@
 - [ ] 전체 선택/해제
 - [ ] 선택된 상품 총 금액 계산
 - [ ] 주문하기 버튼
+**참고:** 사이즈 선택 기능은 제거되었습니다.
 
 **기술 요구사항:**
 
@@ -201,69 +202,77 @@ CREATE TABLE products (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   description TEXT,
-  price INTEGER NOT NULL, -- 원 단위
+  price DECIMAL(10,2) NOT NULL CHECK (price >= 0), -- 원 단위, DECIMAL 타입
   image_url TEXT,
-  category TEXT, -- '상의', '하의', '아우터' 등
-  sizes TEXT[], -- 사용 가능한 사이즈 배열
-  stock INTEGER DEFAULT 0, -- 재고 (선택사항)
+  category TEXT, -- 카테고리 (제약조건 없음, 자유로운 카테고리)
+  stock_quantity INTEGER DEFAULT 0 CHECK (stock_quantity >= 0), -- 재고 수량, 음수 불가
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```
 
-#### 4.1.3 orders (주문)
+#### 4.1.3 cart_items (장바구니)
+
+```sql
+CREATE TABLE cart_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  clerk_id TEXT NOT NULL, -- Clerk 사용자 ID (users 테이블 없이 직접 사용)
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0), -- 수량
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  -- 같은 상품은 중복 방지 (클라이언트에서 수량만 업데이트하도록)
+  UNIQUE(clerk_id, product_id)
+);
+```
+
+#### 4.1.4 orders (주문)
 
 ```sql
 CREATE TABLE orders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id),
-  order_number TEXT UNIQUE NOT NULL, -- 주문번호
-  total_amount INTEGER NOT NULL,
-  status TEXT DEFAULT 'pending', -- 'pending', 'completed', 'cancelled'
-  payment_status TEXT DEFAULT 'pending', -- 'pending', 'paid', 'failed'
-  payment_id TEXT, -- Toss Payments 결제 ID
+  clerk_id TEXT NOT NULL, -- Clerk 사용자 ID
+  total_amount DECIMAL(10,2) NOT NULL CHECK (total_amount >= 0), -- 총 주문 금액 (원 단위, DECIMAL)
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled')), -- 주문 상태
+  shipping_address JSONB, -- 배송지 정보 (JSONB)
+  order_note TEXT, -- 주문 메모
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```
 
-#### 4.1.4 order_items (주문 상품)
+#### 4.1.5 order_items (주문 상품)
 
 ```sql
 CREATE TABLE order_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
-  product_id UUID REFERENCES products(id),
+  order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
   product_name TEXT NOT NULL, -- 주문 시점 상품명 (스냅샷)
-  product_price INTEGER NOT NULL, -- 주문 시점 가격 (스냅샷)
-  size TEXT,
-  quantity INTEGER NOT NULL,
+  quantity INTEGER NOT NULL CHECK (quantity > 0), -- 주문 수량
+  price DECIMAL(10,2) NOT NULL CHECK (price >= 0), -- 주문 시점 가격 (스냅샷, DECIMAL)
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 ```
 
-#### 4.1.5 shipping_addresses (배송지)
-
-```sql
-CREATE TABLE shipping_addresses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
-  recipient_name TEXT NOT NULL,
-  phone TEXT NOT NULL,
-  address TEXT NOT NULL,
-  detail_address TEXT,
-  postal_code TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+**참고:** 배송지 정보는 `orders` 테이블의 `shipping_address` JSONB 필드에 저장됩니다.
 
 ### 4.2 인덱스
 
 ```sql
 -- 성능 최적화를 위한 인덱스
+-- products 테이블 인덱스
 CREATE INDEX idx_products_category ON products(category);
 CREATE INDEX idx_products_is_active ON products(is_active);
+CREATE INDEX idx_products_created_at ON products(created_at DESC); -- 최신순 정렬용
+
+-- cart_items 테이블 인덱스
+CREATE INDEX idx_cart_items_clerk_id ON cart_items(clerk_id);
+CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
+CREATE INDEX idx_cart_items_clerk_created ON cart_items(clerk_id, created_at DESC);
+
+-- orders 테이블 인덱스
 CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_order_number ON orders(order_number);
 CREATE INDEX idx_order_items_order_id ON order_items(order_id);
@@ -425,7 +434,7 @@ CREATE INDEX idx_order_items_order_id ON order_items(order_id);
 
 ## 11. 배포 체크리스트
 
-- [ ] 환경 변수 설정 (Clerk, Supabase, Toss Payments)
+- [ ] 환경 변수 설정 (Clerk, Supabase, Toss Payments, Tavily API)
 - [ ] Vercel 배포
 - [ ] 도메인 연결 (선택사항)
 - [ ] Toss Payments 테스트 모드 설정 확인

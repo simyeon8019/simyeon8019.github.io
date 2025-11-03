@@ -1,11 +1,12 @@
 import Link from "next/link";
 import {
+  Smartphone,
   Shirt,
-  Square,
-  Layers,
-  Circle,
-  Footprints,
+  BookOpen,
+  UtensilsCrossed,
+  Dumbbell,
   Sparkles,
+  Home,
 } from "lucide-react";
 
 interface Category {
@@ -17,46 +18,52 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: "tops",
-    label: "상의",
+    id: "electronics",
+    label: "전자제품",
+    icon: Smartphone,
+    href: "/products?category=electronics",
+  },
+  {
+    id: "clothing",
+    label: "의류",
     icon: Shirt,
-    href: "/products?category=tops",
+    href: "/products?category=clothing",
   },
   {
-    id: "bottoms",
-    label: "하의",
-    icon: Square,
-    href: "/products?category=bottoms",
+    id: "books",
+    label: "도서",
+    icon: BookOpen,
+    href: "/products?category=books",
   },
   {
-    id: "outerwear",
-    label: "아우터",
-    icon: Layers,
-    href: "/products?category=outerwear",
+    id: "food",
+    label: "식품",
+    icon: UtensilsCrossed,
+    href: "/products?category=food",
   },
   {
-    id: "dresses",
-    label: "드레스",
-    icon: Circle,
-    href: "/products?category=dresses",
+    id: "sports",
+    label: "스포츠",
+    icon: Dumbbell,
+    href: "/products?category=sports",
   },
   {
-    id: "shoes",
-    label: "신발",
-    icon: Footprints,
-    href: "/products?category=shoes",
-  },
-  {
-    id: "accessories",
-    label: "액세서리",
+    id: "beauty",
+    label: "뷰티",
     icon: Sparkles,
-    href: "/products?category=accessories",
+    href: "/products?category=beauty",
+  },
+  {
+    id: "home",
+    label: "생활/가정",
+    icon: Home,
+    href: "/products?category=home",
   },
 ];
 
 /**
  * 카테고리 네비게이션 컴포넌트
- * 6개 주요 카테고리를 그리드로 표시하고 클릭 시 해당 카테고리 상품 목록으로 이동
+ * 7개 주요 카테고리를 그리드로 표시하고 클릭 시 해당 카테고리 상품 목록으로 이동
  */
 export default function CategoryNavigation() {
   return (
@@ -65,7 +72,7 @@ export default function CategoryNavigation() {
         <h2 className="mb-8 text-2xl font-bold text-gray-900 dark:text-gray-100">
           카테고리
         </h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
           {categories.map((category) => {
             const Icon = category.icon;
             return (

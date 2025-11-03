@@ -147,9 +147,51 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 NEXT_PUBLIC_STORAGE_BUCKET=uploads
+
+# Image Search APIs (선택사항)
+TAVILY_API_KEY=
+UNSPLASH_ACCESS_KEY=
 ```
 
 ## Development Guidelines
+
+### AI 작업 프로세스
+
+**⚠️ 중요: 기능 업데이트나 내용 추가 시 반드시 다음 순서를 따라야 합니다.**
+
+모든 기능 추가/수정 작업은 다음 프로세스를 따릅니다:
+
+1. **Plan 모드로 계획 수립 (필수)**
+
+   - 기능 업데이트나 내용 추가 요청 시 먼저 계획 수립
+   - `mcp_create_plan` 도구를 사용하여 상세한 구현 계획 작성
+   - 구현 방향과 단계를 명확히 정리
+   - 사용자 승인 후 진행
+
+2. **TODO.md에 구현 상세 내용 기재 (필수)**
+
+   - 계획 수립 후 `docs/TODO.md`에 상세 작업 내용 반영
+   - 체크리스트 형태로 단계별 작업 정리
+   - 각 작업 항목에 대한 설명 및 요구사항 명시
+
+3. **계획 승인 후 실행**
+   - 사용자 승인을 받은 후 실제 구현 진행
+   - TODO.md의 항목을 단계적으로 완료 처리
+   - 각 단계 완료 시 TODO 상태 업데이트 (`todo_write` 도구 사용)
+
+**작업 프로세스 예시:**
+
+```
+1. 사용자 요청: "인기상품 섹션을 생성해줘"
+   ↓
+2. Plan 모드: 계획 수립 및 사용자 승인 대기
+   ↓
+3. TODO.md 업데이트: 구현 상세 내용 기재
+   ↓
+4. 사용자 승인: "Implement the plan as specified"
+   ↓
+5. 실행: TODO.md 항목을 단계적으로 완료하며 구현
+```
 
 ### Server Actions vs API Routes
 
@@ -202,6 +244,8 @@ const searchParams = await props.searchParams;
 
 프로젝트에는 다음 Cursor 규칙들이 있습니다:
 
+- `.cursor/rules/workflow-documentation.mdc`: 작업 전 문서화 필수 규칙 (⚠️ 중요)
+- `.cursor/rules/gen-blog.mdc`: 블로그 포스트 생성 규칙
 - `.cursor/rules/web/nextjs-convention.mdc`: Next.js 컨벤션
 - `.cursor/rules/web/design-rules.mdc`: UI/UX 디자인 가이드
 - `.cursor/rules/web/playwright-test-guide.mdc`: 테스트 가이드

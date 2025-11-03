@@ -55,7 +55,7 @@ export async function GET(
       );
     }
 
-    // 이미지 URL이 null인 경우 Tavily 검색으로 보강
+    // 이미지 URL이 null인 경우 Tavily 검색으로 보강 및 DB 저장
     let imageUrl = product.image_url;
     if (!imageUrl) {
       imageUrl = await getProductImageUrl(
@@ -63,6 +63,38 @@ export async function GET(
         product.name,
         product.category
       );
+      
+      // 이미지를 찾았으면 DB에 저장 (기존 방법대로)
+      if (imageUrl) {
+        try {
+          const { error: updateError } = await supabase
+            .from("products")
+            .update({ image_url: imageUrl })
+            .eq("id", product.id);
+
+          if (updateError) {
+            console.error("❌ 제품 이미지 DB 업데이트 실패:", {
+              productId: product.id,
+              productName: product.name,
+              error: updateError.message,
+              timestamp: new Date().toISOString(),
+            });
+          } else {
+            console.log("✅ 제품 이미지 DB 업데이트 성공:", {
+              productId: product.id,
+              productName: product.name,
+              imageUrl,
+              timestamp: new Date().toISOString(),
+            });
+          }
+        } catch (updateError) {
+          console.error("❌ 제품 이미지 DB 업데이트 에러:", {
+            productId: product.id,
+            error: updateError instanceof Error ? updateError.message : String(updateError),
+            timestamp: new Date().toISOString(),
+          });
+        }
+      }
     }
 
     const productWithImage = {

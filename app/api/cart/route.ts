@@ -28,7 +28,6 @@ export async function GET() {
         `
         id,
         product_id,
-        size,
         quantity,
         created_at,
         updated_at,
@@ -74,7 +73,7 @@ export async function GET() {
 /**
  * 장바구니에 상품 추가 API
  * POST /api/cart
- * 중복 상품 (같은 상품, 같은 사이즈)은 수량 업데이트
+ * 중복 상품 (같은 상품)은 수량 업데이트
  */
 export async function POST(request: NextRequest) {
   try {
@@ -89,12 +88,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { product_id, size, quantity } = body;
+    const { product_id, quantity } = body;
 
     // 입력 검증
-    if (!product_id || !size || !quantity) {
+    if (!product_id || !quantity) {
       return NextResponse.json(
-        { error: "상품 ID, 사이즈, 수량이 필요합니다." },
+        { error: "상품 ID와 수량이 필요합니다." },
         { status: 400 }
       );
     }
@@ -132,8 +131,7 @@ export async function POST(request: NextRequest) {
       .from("cart_items")
       .select("*")
       .eq("clerk_id", userId)
-      .eq("product_id", product_id)
-      .eq("size", size);
+      .eq("product_id", product_id);
 
     if (checkError) {
       console.error("❌ 장바구니 아이템 확인 실패:", checkError);
@@ -186,7 +184,6 @@ export async function POST(request: NextRequest) {
         .insert({
           clerk_id: userId,
           product_id,
-          size,
           quantity,
         })
         .select()
@@ -197,7 +194,6 @@ export async function POST(request: NextRequest) {
           error: insertError,
           userId,
           productId: product_id,
-          size,
           quantity,
           timestamp: new Date().toISOString(),
         });
@@ -216,7 +212,6 @@ export async function POST(request: NextRequest) {
         userId,
         cartItemId: data.id,
         productId: product_id,
-        size,
         quantity,
         timestamp: new Date().toISOString(),
       });

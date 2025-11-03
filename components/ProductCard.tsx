@@ -23,22 +23,25 @@ export default function ProductCard({
   const formattedPrice = new Intl.NumberFormat("ko-KR").format(price);
 
   return (
-    <Link href={`/products/${id}`} className="group">
-      <div className="flex flex-col gap-3">
+    <Link
+      href={`/products/${id}`}
+      className="group block transition-transform duration-200 hover:scale-[1.02]"
+    >
+      <div className="flex flex-col gap-2 sm:gap-3">
         {/* 상품 이미지 */}
-        <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+        <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 shadow-sm transition-shadow duration-300 group-hover:shadow-md dark:bg-gray-800">
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={name}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
             <div className="flex h-full items-center justify-center text-gray-400">
               <svg
-                className="h-12 w-12"
+                className="h-8 w-8 sm:h-12 sm:w-12"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -57,14 +60,14 @@ export default function ProductCard({
         {/* 상품 정보 */}
         <div className="flex flex-col gap-1">
           {category && (
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400">
               {getCategoryLabel(category)}
             </span>
           )}
-          <h3 className="line-clamp-2 font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+          <h3 className="line-clamp-2 text-sm sm:text-base font-medium leading-tight text-gray-900 transition-colors duration-200 group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
             {name}
           </h3>
-          <p className="font-semibold text-gray-900 dark:text-gray-100">
+          <p className="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100">
             {formattedPrice}원
           </p>
         </div>
@@ -78,12 +81,13 @@ export default function ProductCard({
  */
 function getCategoryLabel(category: string): string {
   const categoryMap: Record<string, string> = {
-    tops: "상의",
-    bottoms: "하의",
-    outerwear: "아우터",
-    dresses: "드레스",
-    shoes: "신발",
-    accessories: "액세서리",
+    electronics: "전자제품",
+    clothing: "의류",
+    books: "도서",
+    food: "식품",
+    sports: "스포츠",
+    beauty: "뷰티",
+    home: "생활/가정",
   };
 
   return categoryMap[category] || category;

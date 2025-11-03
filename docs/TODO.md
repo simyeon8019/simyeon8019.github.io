@@ -37,6 +37,10 @@
       - [x] 검색 입력 UI
       - [x] 로딩 상태 처리
       - [x] 에러 상태 처리
+      - [x] 반응형 그리드 레이아웃 개선 (모바일 2열, 태블릿 3열, 데스크톱 4열)
+      - [x] 상품 카드 컴포넌트 반응형 스타일 개선
+      - [x] 필터 및 검색 UI 반응형 개선
+      - [x] 로딩 및 빈 상태 UI 개선
     - [x] 상품 상세 페이지 (app/products/[id]/page.tsx)
       - [x] 상품 이미지 갤러리 (메인 이미지 + 썸네일)
       - [x] 상품 정보 표시 (이름, 가격, 설명)
@@ -46,6 +50,22 @@
       - [x] 바로 구매 버튼
       - [x] 재고 표시 (선택사항)
       - [x] 로딩/에러 상태 처리
+  - [x] 데이터베이스 스키마 생성
+    - [x] products 테이블 생성
+      - [x] 상품 정보 컬럼 정의 (name, price, category, sizes, stock 등)
+      - [x] 카테고리 제약 조건 (CHECK constraint)
+      - [x] 인덱스 생성 (category, is_active, created_at)
+      - [x] updated_at 자동 업데이트 트리거
+      - [x] RLS 비활성화
+    - [x] cart_items 테이블 생성
+      - [x] 장바구니 아이템 컬럼 정의 (clerk_id, product_id, size, quantity)
+      - [x] UNIQUE 제약 조건 (clerk_id, product_id, size)
+      - [x] 수량 제한 (CHECK constraint: 1-99)
+      - [x] 외래 키 제약 조건 (product_id → products)
+      - [x] 인덱스 생성 (clerk_id, product_id, created_at)
+      - [x] updated_at 자동 업데이트 트리거
+      - [x] RLS 비활성화
+    - [x] 마이그레이션 파일 작성 (supabase/migrations.sql)
   - [x] 장바구니 기능 (우선순위: P0)
     - [x] API Route: GET /api/cart
       - [x] Clerk 사용자 ID로 장바구니 조회
@@ -101,13 +121,82 @@
         - [x] 로딩 상태 및 에러 처리
       - [x] 반응형 디자인 구현 (모바일 우선)
       - [x] SEO 최적화 (메타데이터 설정)
-  - [x] 제품 이미지 플레이스홀더 기능 (Tavily API 활용)
-    - [x] Tavily API를 사용한 이미지 검색 유틸리티 함수 생성 (lib/utils/image-placeholder.ts)
-    - [x] API Route: GET /api/products에서 image_url이 null인 경우 Tavily 검색으로 보강
-    - [x] API Route: GET /api/products/[id]에서 image_url이 null인 경우 Tavily 검색으로 보강
-    - [x] 홈페이지 Server Component에서 이미지 보강 처리
+  - [x] 제품 이미지 플레이스홀더 기능 (Unsplash API + Tavily API 활용)
+    - [x] 이미지 검색 유틸리티 함수 생성 (lib/utils/image-placeholder.ts)
+      - [x] searchProductImage 함수: Tavily API를 사용한 제품명 기반 이미지 검색
+      - [x] searchUnsplashImage 함수: Unsplash API를 사용한 이미지 검색 (1순위)
+      - [x] getProductImageUrl 함수: 기존 이미지 검증 후, 없으면 Unsplash → Tavily 순으로 검색
+      - [x] validateImageUrl 함수: 이미지 URL 유효성 검증
+      - [x] 불안정한 도메인 필터링 (티몬, Cafe24, 크로켓 등)
+      - [x] 에러 처리 및 상세 로깅 추가
+    - [x] API Route: GET /api/products에서 image_url이 null이거나 불안정한 경우 이미지 검색 및 DB 저장
+    - [x] API Route: GET /api/products/[id]에서 image_url이 null이거나 불안정한 경우 이미지 검색 및 DB 저장
+    - [x] 홈페이지 Server Component에서 이미지 보강 처리 및 DB 저장
     - [x] next.config.ts에 외부 이미지 도메인 remotePatterns 추가
-    - [x] 에러 처리 및 로깅 추가
+      - [x] Unsplash 도메인 추가 (images.unsplash.com, plus.unsplash.com)
+      - [x] 티몬, Cafe24, 크로켓 도메인 추가 (호환성)
+      - [x] HTTP/HTTPS 모든 프로토콜 허용
+    - [x] 환경 변수 설정
+      - [x] TAVILY_API_KEY (2순위 폴백)
+      - [x] UNSPLASH_ACCESS_KEY (1순위)
+    - [x] 이미지 검색 에러 리포트 작성 (docs/error-report-product-images.md)
+- [x] DB 스키마 마이그레이션: shoppingmall.sql 구조로 전환
+  - [x] 데이터베이스 마이그레이션
+    - [x] 마이그레이션 파일 생성 (supabase/migrations/20251103111020_migrate_to_shoppingmall_schema.sql)
+      - [x] 기존 테이블 삭제 (DROP CASCADE)
+      - [x] shoppingmall.sql 구조로 테이블 재생성
+        - [x] products: price DECIMAL(10,2), category TEXT(제약조건 없음), sizes 제거, stock_quantity로 변경
+        - [x] cart_items: size 필드 제거, UNIQUE 제약조건 변경 (clerk_id, product_id만)
+        - [x] orders: clerk_id 기반 구조, shipping_address JSONB, order_note 추가
+        - [x] order_items: 구조 확인 및 필요시 수정
+      - [x] updated_at 트리거 재등록
+      - [x] 인덱스 재생성
+      - [x] RLS 비활성화
+      - [x] 권한 부여
+    - [x] 샘플 데이터 삽입 (20개 상품: electronics, clothing, books, food, sports, beauty, home)
+    - [ ] 마이그레이션 테스트 및 검증 (Supabase에 적용 후 테스트 필요)
+  - [x] 타입 정의 업데이트
+    - [x] app/products/page.tsx: Product 인터페이스 수정 (sizes 제거, stock_quantity로 변경)
+    - [x] app/products/[id]/page.tsx: Product 인터페이스 수정 (sizes 제거, stock_quantity로 변경)
+    - [x] app/page.tsx: Product 인터페이스 수정
+    - [x] components/ProductSection.tsx: Product 인터페이스 수정 (변경 불필요 확인됨)
+    - [x] app/cart/page.tsx: Product, CartItem 인터페이스 수정 (size 제거)
+  - [x] API Route 업데이트
+    - [x] app/api/products/route.ts: price 타입 처리 (DECIMAL → number), stock_quantity 필드명 변경
+    - [x] app/api/products/[id]/route.ts: sizes 제거, stock_quantity로 변경
+    - [x] app/api/cart/route.ts: size 필드 제거, UNIQUE 제약조건 변경 (clerk_id, product_id만)
+  - [x] UI 컴포넌트 업데이트
+    - [x] app/products/page.tsx: 카테고리 필터 목록 변경 (electronics, clothing, books, food, sports, beauty, home)
+    - [x] app/products/[id]/page.tsx: 사이즈 선택 UI 완전 제거
+    - [x] app/cart/page.tsx: 사이즈 표시 제거
+    - [x] components/ProductCard.tsx: getCategoryLabel 함수 업데이트 (새 카테고리 추가)
+    - [x] app/page.tsx: 홈페이지 카테고리 네비게이션 업데이트 (7개 카테고리)
+  - [x] 문서 업데이트
+    - [x] docs/PRD.md: 스키마 섹션 업데이트 (4.1.2, 4.1.3, 4.1.4, 4.1.5)
+    - [x] docs/CHANGELOG.md: 변경 이력 기록
+  - [x] 다양한 카테고리 테스트 상품 추가
+    - [x] 마이그레이션 파일 생성 (supabase/migrations/20251103111938_add_multi_category_products.sql)
+      - [x] category CHECK 제약조건 제거 (다양한 카테고리 허용)
+      - [x] 전자제품(electronics) 8개 상품 추가
+      - [x] 도서(books) 8개 상품 추가
+      - [x] 식품(food) 8개 상품 추가
+      - [x] 스포츠(sports) 8개 상품 추가
+      - [x] 뷰티(beauty) 8개 상품 추가
+      - [x] 생활/가정(home) 8개 상품 추가
+      - [x] 의류(clothing) 4개 상품 추가
+      - [x] 총 52개 상품 추가 완료
+    - [x] 코드 연동 확인
+      - [x] app/products/page.tsx: 카테고리 필터 목록 확인 (7개 카테고리)
+      - [x] components/ProductCard.tsx: getCategoryLabel 함수 확인 (7개 카테고리 매핑)
+      - [x] components/CategoryNavigation.tsx: 홈페이지 카테고리 네비게이션 확인
+      - [x] app/page.tsx: 홈페이지 상품 표시 확인
+    - [x] 문서 업데이트
+      - [x] docs/CHANGELOG.md: 다양한 카테고리 테스트 상품 추가 이력 기록
+    - [x] Unsplash 이미지 추가
+      - [x] Unsplash API 유틸리티 함수 생성
+      - [x] 다중 소스 이미지 검색 전략 구현 (Unsplash → Tavily)
+      - [x] 자동 이미지 검색 및 DB 저장 기능 구현
+      - [ ] (선택사항) 기존 불안정한 이미지 일괄 정리 SQL 실행
 - [ ] Phase 3 (Week 2): 주문 및 결제
   - [ ] 주문 프로세스 (우선순위: P0)
     - [ ] API Route: POST /api/orders

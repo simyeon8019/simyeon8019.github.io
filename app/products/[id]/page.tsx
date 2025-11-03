@@ -21,8 +21,7 @@ interface Product {
   price: number;
   image_url: string | null;
   category: string;
-  sizes: string[];
-  stock: number;
+  stock_quantity: number;
 }
 
 interface ProductResponse {
@@ -32,7 +31,7 @@ interface ProductResponse {
 
 /**
  * 상품 상세 페이지
- * 상품 이미지, 정보, 사이즈/수량 선택, 장바구니 추가 기능을 제공합니다.
+ * 상품 이미지, 정보, 수량 선택, 장바구니 추가 기능을 제공합니다.
  */
 export default function ProductDetailPage() {
   const params = useParams();
@@ -42,7 +41,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
@@ -65,10 +63,6 @@ export default function ProductDetailPage() {
 
       if (data.success && data.product) {
         setProduct(data.product);
-        // 첫 번째 사이즈를 기본값으로 설정
-        if (data.product.sizes.length > 0) {
-          setSelectedSize(data.product.sizes[0]);
-        }
         console.log("✅ 상품 조회 성공:", {
           productId: data.product.id,
           productName: data.product.name,
@@ -96,7 +90,7 @@ export default function ProductDetailPage() {
 
   // 수량 증가
   const handleIncreaseQuantity = () => {
-    if (product && quantity < 99 && quantity < product.stock) {
+    if (product && quantity < 99 && quantity < product.stock_quantity) {
       setQuantity(quantity + 1);
     }
   };
@@ -110,11 +104,6 @@ export default function ProductDetailPage() {
 
   // 장바구니 추가
   const handleAddToCart = async () => {
-    if (!selectedSize) {
-      alert("사이즈를 선택해주세요.");
-      return;
-    }
-
     setIsAddingToCart(true);
 
     try {
@@ -125,7 +114,6 @@ export default function ProductDetailPage() {
         },
         body: JSON.stringify({
           product_id: productId,
-          size: selectedSize,
           quantity: quantity,
         }),
       });
@@ -145,7 +133,6 @@ export default function ProductDetailPage() {
 
       console.log("✅ 장바구니 추가 성공:", {
         productId,
-        size: selectedSize,
         quantity,
         cartItemId: data.cartItem?.id,
         timestamp: new Date().toISOString(),
@@ -180,12 +167,13 @@ export default function ProductDetailPage() {
   // 카테고리 라벨 변환
   const getCategoryLabel = (category: string): string => {
     const categoryMap: Record<string, string> = {
-      tops: "상의",
-      bottoms: "하의",
-      outerwear: "아우터",
-      dresses: "드레스",
-      shoes: "신발",
-      accessories: "액세서리",
+      electronics: "전자제품",
+      clothing: "의류",
+      books: "도서",
+      food: "식품",
+      sports: "스포츠",
+      beauty: "뷰티",
+      home: "생활/가정",
     };
     return categoryMap[category] || category;
   };
@@ -300,32 +288,11 @@ export default function ProductDetailPage() {
             )}
 
             {/* 재고 정보 */}
-            {product.stock > 0 && (
+            {product.stock_quantity > 0 && (
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  재고: {product.stock}개
+                  재고: {product.stock_quantity}개
                 </p>
-              </div>
-            )}
-
-            {/* 사이즈 선택 */}
-            {product.sizes.length > 0 && (
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-gray-100">
-                  사이즈
-                </label>
-                <Select value={selectedSize} onValueChange={setSelectedSize}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="사이즈를 선택하세요" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {product.sizes.map((size) => (
-                      <SelectItem key={size} value={size}>
-                        {size}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
             )}
 
@@ -354,16 +321,17 @@ export default function ProductDetailPage() {
                     onClick={handleIncreaseQuantity}
                     disabled={
                       quantity >= 99 ||
-                      (product.stock > 0 && quantity >= product.stock)
+                      (product.stock_quantity > 0 &&
+                        quantity >= product.stock_quantity)
                     }
                     className="h-10 w-10"
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                {product.stock > 0 && (
+                {product.stock_quantity > 0 && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    최대 {Math.min(99, product.stock)}개
+                    최대 {Math.min(99, product.stock_quantity)}개
                   </p>
                 )}
               </div>
@@ -373,7 +341,7 @@ export default function ProductDetailPage() {
             <div className="flex flex-col gap-3">
               <Button
                 onClick={handleAddToCart}
-                disabled={isAddingToCart || !selectedSize}
+                disabled={isAddingToCart}
                 className="w-full"
                 size="lg"
               >
@@ -391,7 +359,6 @@ export default function ProductDetailPage() {
               </Button>
               <Button
                 onClick={handleBuyNow}
-                disabled={!selectedSize}
                 variant="outline"
                 className="w-full"
                 size="lg"
